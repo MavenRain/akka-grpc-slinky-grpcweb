@@ -62,6 +62,7 @@ lazy val client =
       libraryDependencies += "me.shadaj" %%% "slinky-web" % slinkyVersion,
       libraryDependencies += "me.shadaj" %%% "slinky-hot" % slinkyVersion,
       scalacOptions += "-Ymacro-annotations",
+      scalacOptions += "-Xfatal-warnings",
       npmDependencies in Compile += "react"                  -> reactVersion,
       npmDependencies in Compile += "react-dom"              -> reactVersion,
       npmDependencies in Compile += "react-proxy"            -> reactProxyVersion,
@@ -144,5 +145,3 @@ lazy val server = project
 
 addCommandAlias("serverDev", "~server/reStart")
 addCommandAlias("clientDev", "client/fastOptJS::startWebpackDevServer;~client/fastOptJS")
-
-scalaJSUseMainModuleInitializer := true

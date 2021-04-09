@@ -26,10 +26,10 @@ object Server extends Directives {
       WebHandler.defaultCorsSettings
 
   def startHttpServer()(implicit actorSystem: ActorSystem[_]): Unit =
-    WebHandler
-      .grpcWebHandler(ServiceHandler.partial(new ServiceImpl()))
-      .pipe(grpcWebServiceHandlers =>
-        Runtime.default.unsafeRunAsync_(ZIO.fromFuture(_ =>
+    Runtime.default.unsafeRunAsync_(ZIO.fromFuture(_ =>
+      WebHandler
+        .grpcWebHandler(ServiceHandler.partial(new ServiceImpl()))
+        .pipe(grpcWebServiceHandlers =>
           Http()
             .newServerAt(
               interface = "0.0.0.0",
@@ -39,11 +39,11 @@ object Server extends Directives {
               new WebService().route,
               ctx => grpcWebServiceHandlers(ctx.request).map(RouteResult.Complete)(actorSystem.executionContext)
             )))
-        ).fold(
-          ex => logger.error(s"gRPC server binding failed", ex).tap(_ => actorSystem.terminate()),
-          binding => logger.info(s"gRPC server bound to: ${binding.localAddress}")
-        ))
-      )
+        )
+    ).fold(
+      ex => logger.error(s"gRPC server binding failed", ex).tap(_ => actorSystem.terminate()),
+      binding => logger.info(s"gRPC server bound to: ${binding.localAddress}")
+    ))
 
   def main(args: Array[String]): Unit =
     ActorSystem[Nothing](

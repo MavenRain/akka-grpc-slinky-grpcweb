@@ -2,7 +2,6 @@ package com.example.client
 
 import com.example.client.App.serviceStub
 import com.example.service.Request
-import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.chaining.scalaUtilChainingOps
 import scalapb.grpcweb.Metadata
 import slinky.core.FunctionalComponent
@@ -11,7 +10,8 @@ import slinky.core.facade.Hooks.{useEffect, useState}
 import slinky.web.html.{div, h2, p}
 import zio.{Runtime, ZIO}
 
-@react object Unary {
+@react
+object Unary {
   type Props = Unit
 
   val component: FunctionalComponent[Props] = FunctionalComponent { _ =>

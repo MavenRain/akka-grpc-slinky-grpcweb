@@ -3,13 +3,11 @@ package com.example.server
 import akka.NotUsed
 import akka.actor.typed.ActorSystem
 import akka.pattern.after
-import akka.stream.scaladsl.Sink
-import akka.stream.scaladsl.Source
-import com.example.Request
-import com.example.Response
-import com.example.Service
+import akka.stream.scaladsl.{Sink, Source}
+import com.example.{Request, Response, Service}
 import scala.concurrent.Future
 import scala.concurrent.duration.{DurationDouble, DurationInt}
+import scala.util.chaining.scalaUtilChainingOps
 
 class ServiceImpl(implicit actorSystem: ActorSystem[_]) extends Service {
 
@@ -33,15 +31,10 @@ class ServiceImpl(implicit actorSystem: ActorSystem[_]) extends Service {
   override def clientStreaming(in: Source[Request, NotUsed]): Future[Response] =
     in
       .zipWithIndex
-      .map {
-        case (in, idx) =>
-          (in, idx)
-      }
+      .collect { case (in, idx) => (in, idx) }
       .runWith(Sink.lastOption)
-      .map {
-        case Some((lastIn, lastIdx)) =>
-          Response(s"Received last [$lastIn] idx [$lastIdx]")
-        case None =>
-          Response(s"Received nothing")
-      }(actorSystem.executionContext)
+      .map(_.fold(s"Received nothing") { case (lastIn, lastIdx) =>
+        s"Received last [$lastIn] idx [$lastIdx]"
+      })(actorSystem.executionContext)
+      .map(Response(_))(actorSystem.executionContext)
 }
