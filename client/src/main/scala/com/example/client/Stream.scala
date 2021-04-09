@@ -17,7 +17,7 @@ object Stream {
   case class Props(cancel: Boolean)
 
   val component = FunctionalComponent[Props] { props =>
-    useState(("Request pending", 0)).pipe { case ((status, resCount), setStatus) =>
+    useState(("Request pending", 0)).pipe { case ((status, _), setStatus) =>
       useEffect(
         () => {
           serviceStub
@@ -26,13 +26,13 @@ object Stream {
               Metadata("custom-header-2" -> "streaming-value"),
               new StreamObserver[Response] {
                 override def onNext(value: Response): Unit =
-                  setStatus((s"Received success [$resCount]", resCount + 1))
+                  setStatus({ case (_, count) => (s"Received success [$count]", count + 1) })
 
                 override def onError(ex: Throwable): Unit =
-                  setStatus((s"Received failure: $ex", resCount))
+                  setStatus({ case (_, count) => (s"Received failure: $ex", count) })
 
                 override def onCompleted(): Unit =
-                  setStatus((s"Received completed", resCount))
+                  setStatus({ case (_, count) => (s"Received completed", count) })
               }
             )
             .pipe(stream =>
@@ -40,7 +40,7 @@ object Stream {
                 .pipe(_ =>
                   if (props.cancel)
                     Some(setTimeout(5000) {
-                      setStatus((s"Stream stopped by client", resCount))
+                      setStatus({ case (_, count) => (s"Stream stopped by client", count) })
                       stream.cancel()
                     })
                   else
