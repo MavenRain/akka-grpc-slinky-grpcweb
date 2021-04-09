@@ -13,7 +13,7 @@ import zio.{Runtime, ZIO}
 @react
 object Foo {
   type Props = Unit
-  val component: FunctionalComponent[Props] = FunctionalComponent { _ =>
+  val component = FunctionalComponent[Props] { _ =>
     useState("").pipe { case (text, setText) =>
       useEffect(() =>
         Runtime.default.unsafeRunAsync_(ZIO.fromFuture(context => get("http://localhost:11111/").map(_.responseText)(context)).fold(

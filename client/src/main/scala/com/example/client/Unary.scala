@@ -14,7 +14,7 @@ import zio.{Runtime, ZIO}
 object Unary {
   type Props = Unit
 
-  val component: FunctionalComponent[Props] = FunctionalComponent { _ =>
+  val component = FunctionalComponent[Props] { _ =>
     useState("Request pending").pipe { case (status, setStatus) =>
       useEffect(
         () =>

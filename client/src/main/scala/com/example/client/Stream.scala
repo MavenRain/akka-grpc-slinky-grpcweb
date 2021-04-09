@@ -16,11 +16,10 @@ import slinky.web.html.{div, h2, p}
 object Stream {
   case class Props(cancel: Boolean)
 
-  val component: FunctionalComponent[Props] = FunctionalComponent { props =>
+  val component = FunctionalComponent[Props] { props =>
     useState(("Request pending", 0)).pipe { case ((status, resCount), setStatus) =>
       useEffect(
         () => {
-
           serviceStub
             .serverStreaming(
               Request(payload = "Hello!"),
@@ -37,7 +36,7 @@ object Stream {
               }
             )
             .pipe(stream =>
-              setStatus("Request sent")
+              setStatus(("Request sent", resCount))
                 .pipe(_ =>
                   if (props.cancel)
                     Some(setTimeout(5000) {
