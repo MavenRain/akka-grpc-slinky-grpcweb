@@ -3,6 +3,7 @@ package com.example.client
 import com.example.service.ServiceGrpcWeb
 import io.grpc.ManagedChannel
 import scala.scalajs.LinkingInfo
+import scala.util.chaining.scalaUtilChainingOps
 import scalapb.grpc.Channels
 import scalapb.grpcweb.Metadata
 import slinky.core.StatelessComponent
@@ -19,7 +20,8 @@ class App extends StatelessComponent {
       h1("Hello world!"),
       Unary(),
       Stream(cancel = false),
-      Stream(cancel = true)
+      Stream(cancel = true),
+      Foo()
     )
 }
 
