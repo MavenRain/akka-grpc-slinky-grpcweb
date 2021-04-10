@@ -17,7 +17,7 @@ object Stream {
   case class Props(cancel: Boolean)
 
   val component = FunctionalComponent[Props] { props =>
-    useState(("Request pending", 0)).pipe { case ((status, _), setStatus) =>
+    useState(("Request pending", 0)).pipe { case ((status, count), setStatus) =>
       useEffect(
         () => {
           serviceStub
@@ -36,7 +36,7 @@ object Stream {
               }
             )
             .pipe(stream =>
-              setStatus(("Request sent", resCount))
+              setStatus(("Request sent", count))
                 .pipe(_ =>
                   if (props.cancel)
                     Some(setTimeout(5000) {

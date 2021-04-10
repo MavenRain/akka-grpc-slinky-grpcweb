@@ -6,7 +6,7 @@ import scala.scalajs.LinkingInfo
 import scala.util.chaining.scalaUtilChainingOps
 import scalapb.grpc.Channels
 import scalapb.grpcweb.Metadata
-import slinky.core.StatelessComponent
+import slinky.core.{StatelessComponent, Tag}
 import slinky.core.annotations.react
 import slinky.core.facade.{Fragment, ReactElement}
 import slinky.web.html.h1
@@ -26,6 +26,9 @@ class App extends StatelessComponent {
 }
 
 object App {
+
+  def createTag[T <: Tag](tag: T): ReactElement =
+    tag.apply("Hello")
 
   val serviceStub: ServiceGrpcWeb.Service[Metadata] =
     ServiceGrpcWeb.stub(
