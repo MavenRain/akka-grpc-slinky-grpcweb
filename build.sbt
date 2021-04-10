@@ -18,6 +18,7 @@ lazy val scalaTestPlusPlayVersion = "5.0.0"
 lazy val scalaJavaTime = "2.0.0"
 lazy val scalaJsDomVersion        = "1.1.0"
 lazy val scalaJsScriptsVersion    = "1.1.4"
+lazy val shapelessVersion = "2.3.4"
 lazy val slinkyVersion            = "0.6.7"
 lazy val reactVersion             = "16.12.0"
 lazy val reactProxyVersion        = "1.1.8"
@@ -61,6 +62,7 @@ lazy val client =
       libraryDependencies += "io.github.cquiroz" %%% "scala-java-time" % scalaJavaTime,
       libraryDependencies += "me.shadaj" %%% "slinky-web" % slinkyVersion,
       libraryDependencies += "me.shadaj" %%% "slinky-hot" % slinkyVersion,
+      libraryDependencies += "com.chuusai" %%% "shapeless" % shapelessVersion,
       scalacOptions += "-Ymacro-annotations",
       scalacOptions += "-Xfatal-warnings",
       scalacOptions += "-feature",
@@ -115,6 +117,7 @@ lazy val server = project
     WebKeys.packagePrefix in Assets := "public/",
     managedClasspath in Runtime += (packageBin in Assets).value,
     libraryDependencies ++= Seq(
+      "com.chuusai" %% "shapeless" % shapelessVersion,
       "com.typesafe.akka" %% "akka-actor-typed"         % akkaVersion,
       "com.typesafe.akka" %% "akka-stream"              % akkaVersion,
       "com.typesafe.akka" %% "akka-discovery"           % akkaVersion,
@@ -125,8 +128,8 @@ lazy val server = project
       "ch.qos.logback"    % "logback-classic"           % logbackVersion,
       "com.typesafe.akka" %% "akka-actor-testkit-typed" % akkaVersion % Test,
       "com.typesafe.akka" %% "akka-stream-testkit"      % akkaVersion % Test,
-      "org.scalatest"     %% "scalatest"                % "3.1.1" % Test,
-      "dev.zio" %% "zio" % zioVersion
+      "dev.zio" %% "zio" % zioVersion,
+      "org.scalatest"     %% "scalatest"                % "3.1.1" % Test
     ),
     Compile / mainClass := Some("com.example.server.Server"),
     buildInfoKeys ++= Seq[BuildInfoKey]("environmentMode" -> autoImport.buildEnv.value),
