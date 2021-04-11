@@ -18,7 +18,7 @@ class ServiceImpl(implicit actorSystem: ActorSystem[_]) extends Service {
     Source
       .repeat(in)
       .zipWithIndex
-      .map {
+      .collect {
         case (in, idx) =>
           Response(s"Received [${in.payload}] idx [$idx]")
       }

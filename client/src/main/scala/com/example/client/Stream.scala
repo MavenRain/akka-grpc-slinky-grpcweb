@@ -17,8 +17,6 @@ import slinky.web.html.{div, h2, p}
 object Stream {
   case class Props(cancel: Boolean)
 
-  private val foo = 1 :: "Yes" :: true :: HNil
-
   val component = FunctionalComponent[Props] { props =>
     useState("Request pending" :: 0 :: HNil).pipe { case (status :: count :: HNil, setStatus) =>
       useEffect(
